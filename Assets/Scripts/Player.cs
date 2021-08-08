@@ -55,8 +55,8 @@ public class Player : MonoBehaviour
 			Physics.IgnoreCollision(ownCollider, arms[i].GetComponent<Collider>(), true);
         }
 
-		leftArm.GetComponent<TestHand>().playerCollider = ownCollider;
-		rightArm.GetComponent<TestHand>().playerCollider = ownCollider;
+		//leftArm.GetComponent<TestHand>().playerCollider = ownCollider;
+		//rightArm.GetComponent<TestHand>().playerCollider = ownCollider;
 	}
 
 	public void onMove(InputAction.CallbackContext ctx)
@@ -106,6 +106,13 @@ public class Player : MonoBehaviour
 		}
 	}
 
+    private void Update()
+    {
+		//allows the player to turn on his horizontal plane
+		transform.rotation *=
+			Quaternion.Euler(new Vector3(0, turning * turnSensivity * Time.deltaTime, 0));
+	}
+
     void FixedUpdate()
     {
 		attractor = pg.mainAttractor;
@@ -128,12 +135,9 @@ public class Player : MonoBehaviour
 		rb.AddForce(jumpForce, ForceMode.VelocityChange);
 
 		//------------------------------------------------------------------------------------------
+
 		//makes the player always be standing in relation to the planet
 		transform.rotation = Quaternion.FromToRotation(transform.up, mainVector) * transform.rotation;
-
-		//allows the player to turn on his horizontal plane
-		transform.rotation *=
-			Quaternion.Euler(new Vector3(0, turning * turnSensivity * Time.fixedDeltaTime, 0));
 
 		//moving
 		Vector3 normal = transform.up;
@@ -145,8 +149,12 @@ public class Player : MonoBehaviour
 		{
 			displacement *= sprintFactor;
 		}
+		displacement *= Time.fixedDeltaTime * speed;
+		float heightCorrection = attractor.radius -
+			Mathf.Sqrt(displacement.sqrMagnitude + Mathf.Pow(attractor.radius, 2));
 
-		rb.MovePosition(rb.position + displacement * Time.fixedDeltaTime * speed);
+		//rb.MovePosition(rb.position + displacement + heightCorrection * mainVector);
+		transform.position += displacement + heightCorrection * mainVector;
 
 		if (pressingBoost)
 		{

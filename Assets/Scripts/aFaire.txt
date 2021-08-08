@@ -1,5 +1,7 @@
 au plus tôt : 
-	-un script pour les objets attirés génériques
+	-pour le grabber :
+		-comprendre le problème quand les collisions sont activées
+		-régler le délai de mise à jour de la position
 	-refix le script avec les débris
 
 faire un tp du bas de la tour vers le haut
@@ -18,6 +20,7 @@ en apprendre assez sur les raycast pour stick le perso au sol
 comprendre pourquoi les objets simples se barent
 comprendre pourquoi on a toujours du stutter sur les planètes parfois
 mettre une animation de super-nova avec la musique éponyme (faire un joli soleil ducoup)
+ne pas hésiter à faire une ISS (avec ducoup des contrôles basés sur les forces)
 
 
 j'ai trouvé la réponse : les "props" sont "follow object" du globe, ce qui nique leur physique 
