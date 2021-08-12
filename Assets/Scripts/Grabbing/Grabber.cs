@@ -6,17 +6,22 @@ using UnityEngine.InputSystem;
 [RequireComponent (typeof(Rigidbody))]
 public class Grabber : MonoBehaviour
 {
+    public Rigidbody playerRigidbody;
+    public Collider armCollider;
+
     private List<Grabbed> inRange = new List<Grabbed>();
     private Grabbed grabbed = null;
     private bool justDropped;
-
-    public Rigidbody playerRigidbody;
-    public Collider armCollider;
+    private float handOffsetFactor = 0.2f;
 
     private void LateUpdate()
     {
         if (grabbed != null)
             grabbed.transform.position = transform.position;
+            if(grabbed.trackRotation)
+                grabbed.transform.rotation = transform.rotation;
+            else 
+                grabbed.transform.position += playerRigidbody.transform.up * handOffsetFactor;
         if (justDropped)
         {
             grabbed = null;
@@ -35,6 +40,7 @@ public class Grabber : MonoBehaviour
         if (inRange.Count != 0)
         {
             grabbed = inRange[0];
+            grabbed.onGrab();
             inRange.Remove(grabbed);
         }
     }

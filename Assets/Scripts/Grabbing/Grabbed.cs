@@ -6,10 +6,14 @@ public class Grabbed : MonoBehaviour
 {
     const float coolDown = 2f;
 
+    public bool trackRotation;
+
     float time = 0f;
     bool isCounting = false;
     Collider ownCollider;
     Collider otherCollider = null;
+
+    private bool grabbed = false;
 
     private void Awake()
     {
@@ -30,12 +34,19 @@ public class Grabbed : MonoBehaviour
             }
         }
     }
+    
+    public void onGrab(){
+        grabbed = true;
+    }
 
     public void onRelease(Collider other)
     {
+        grabbed = false;
         isCounting = true;
         otherCollider = other;
         Physics.IgnoreCollision(ownCollider, otherCollider, true);
         Debug.Log("Ignoring Collisions");
     }
+
+    public bool isGrabbed() { return grabbed; }
 }

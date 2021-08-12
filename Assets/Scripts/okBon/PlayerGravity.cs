@@ -34,7 +34,6 @@ public class PlayerGravity : MonoBehaviour
             Vector3 relPosition = attr.transform.position - transform.position;
             float distSq = relPosition.sqrMagnitude;
             float factor = Constants.G * attr.mass / distSq;
-            acceleration += relPosition.normalized * factor;
 
             float distanceToSurface = attr.distanceToSurface(transform.position);
             if (distanceToSurface < shortestDist)
@@ -42,6 +41,11 @@ public class PlayerGravity : MonoBehaviour
                 shortestDist = distanceToSurface;
                 closestAttractor = attr;
             }
+
+            //this line should give the possibility to go under the surface of planets with acceptable gravity
+            if(distanceToSurface < 0) factor = attr.surfaceGravity;
+
+            acceleration += relPosition.normalized * factor;
             
         }
         //Debug.Log("added acceleration " + acceleration + ", attractors length : " + attractors.Length);

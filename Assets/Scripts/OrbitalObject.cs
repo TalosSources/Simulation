@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class OrbitalObject : MonoBehaviour
 {
-    private GameObject planet;
+    public AttractedObject3 planet;
     public float scaleFactor;
     public int debrisCount;
     public float velocityFactor;
+    public float coolDownAge;
 
     public int maxDebrisCount;
 
@@ -16,16 +17,16 @@ public class OrbitalObject : MonoBehaviour
 
     private void Start()
     {
-        planet = GetComponent<AttractedObject>().mainAttractor;
-    }
+        GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+    } 
 
     private void Update()
     {
-        Vector3 mainVector = transform.position;
+        /*Vector3 mainVector = transform.position;
         mainVector -= planet.transform.position;
-        transform.rotation = Quaternion.FromToRotation(transform.up, mainVector) * transform.rotation;
+        transform.rotation = Quaternion.FromToRotation(transform.up, mainVector) * transform.rotation;*/
 
-        if(age < 2)
+        if(age < coolDownAge)
             age += Time.deltaTime;
     }
 
@@ -36,7 +37,7 @@ public class OrbitalObject : MonoBehaviour
             //Destroy(gameObject);
         } else
         {
-            if (age > 1 && collision.gameObject.CompareTag("Debris") && SatelliteSpawner.launchCount < maxDebrisCount)
+            if (age >= coolDownAge && collision.gameObject.CompareTag("Debris") && SatelliteSpawner.launchCount < maxDebrisCount)
             {
                 for (int i = 0; i < debrisCount; ++i)
                 {

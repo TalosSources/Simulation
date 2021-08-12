@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SatelliteSpawner : MonoBehaviour
+public class satSpawner : MonoBehaviour
 {
-    public GameObject Satellite;
-    public GameObject planet;
+    public OrbitalObject satellite;
+    public AttractedObject3 planet;
     public float heightFactor;
-    public float initialSpeed;
+    private float initialSpeed;
 
     public float timeBetwwenLaunches = 0.1f;
 
@@ -19,25 +19,26 @@ public class SatelliteSpawner : MonoBehaviour
     private void Start()
     {
         if (planet == null) planet = GameObject.FindGameObjectWithTag("Planet");
-        Satellite.GetComponent<AttractedObject>().attractors[0] = planet;
+        satellite.planet = planet;
+        initialSpeed = Constants.circularOrbitSpeed(planet.radius * heightFactor ,planet.mass);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (launchCount > maxLaunchCount) return;
+        if (launchCount > maxLaunchCount) gameObject.SetActive(false);
 
         time += Time.deltaTime;
 
         if (time > timeBetwwenLaunches)
         {
-            GameObject newSatellite = Instantiate(Satellite, transform);
+            GameObject newSatellite = Instantiate(satellite, transform);
             Vector3 position = randomSpherePosition(planet.transform.position, 
                 heightFactor * planet.transform.lossyScale.x);
             Vector3 direction = randomVelocityWithPosition(planet.transform.position, position, initialSpeed);
 
             newSatellite.transform.position = position;
-            Rigidbody rb = newSatellite.GetComponent<Rigidbody>();
+            Rigidbody rb = newsat.GetComponent<Rigidbody>();
             rb.velocity = direction;
 
             ++launchCount;
