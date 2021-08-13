@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent (typeof(Rigidbody))]
+[RequireComponent(typeof(EstimateVelocity))]
 public class Grabber : MonoBehaviour
 {
     public Rigidbody playerRigidbody;
@@ -14,14 +15,25 @@ public class Grabber : MonoBehaviour
     private bool justDropped;
     private float handOffsetFactor = 0.2f;
 
+    private EstimateVelocity ev;
+
+    private void Awake()
+    {
+        ev = GetComponent<EstimateVelocity>();
+        ev.local = false;
+    }
+
     private void LateUpdate()
     {
         if (grabbed != null)
+        {
             grabbed.transform.position = transform.position;
-            if(grabbed.trackRotation)
+            if (grabbed.trackRotation)
                 grabbed.transform.rotation = transform.rotation;
-            else 
-                grabbed.transform.position += playerRigidbody.transform.up * handOffsetFactor;
+            else
+                grabbed.transform.position += (playerRigidbody.transform.up + /*playerRigidbody.*/transform.forward) * handOffsetFactor;
+        }
+
         if (justDropped)
         {
             grabbed = null;
@@ -37,11 +49,21 @@ public class Grabber : MonoBehaviour
 
     public void onGrab()
     {
-        if (inRange.Count != 0)
+        /*if (inRange.Count != 0)
         {
             grabbed = inRange[0];
             grabbed.onGrab();
-            inRange.Remove(grabbed);
+            //inRange.Remove(grabbed);
+        }*/
+
+        foreach(Grabbed g in inRange)
+        {
+            if (!g.grabbed)
+            {
+                grabbed = g;
+                g.onGrab();
+                break;
+            }
         }
     }
 
@@ -53,8 +75,8 @@ public class Grabber : MonoBehaviour
         //grabbed.transform.position += transform.forward * 0.3f;
         grabbed.onRelease(armCollider);
         grabbed.transform.position = transform.position;
-        grabRB.velocity = playerRigidbody.velocity;
-        inRange.Add(grabbed);
+        grabRB.velocity = /*playerRigidbody.velocity +*/ ev.velocity;
+        //inRange.Add(grabbed);
         justDropped = true;
     }
 
@@ -67,8 +89,23 @@ public class Grabber : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        //Debug.Log(other.gameObject.name + " has exited the collider");
         Grabbed grabbed = other.GetComponent<Grabbed>();
         if (grabbed != null && inRange.Contains(grabbed))
+        {
+            //Debug.Log("it has been removed");
+            //Debug.Log("In range : " + print(inRange));
             inRange.Remove(grabbed);
+        }
+    }
+
+    private string print(List<Grabbed> list)
+    {
+        string s = "[";
+        for(int i = 0; i < list.Count - 1; ++i)
+        {
+            s += list[i].gameObject.name + ", "; 
+        }
+        return s + list[list.Count - 1] + "]";
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class satSpawner : MonoBehaviour
+public class SatelliteSpawner : MonoBehaviour
 {
     public OrbitalObject satellite;
     public AttractedObject3 planet;
@@ -18,7 +18,7 @@ public class satSpawner : MonoBehaviour
 
     private void Start()
     {
-        if (planet == null) planet = GameObject.FindGameObjectWithTag("Planet");
+        if (planet == null) planet = GameObject.FindGameObjectWithTag("Planet").GetComponent<AttractedObject3>();
         satellite.planet = planet;
         initialSpeed = Constants.circularOrbitSpeed(planet.radius * heightFactor ,planet.mass);
     }
@@ -32,13 +32,13 @@ public class satSpawner : MonoBehaviour
 
         if (time > timeBetwwenLaunches)
         {
-            GameObject newSatellite = Instantiate(satellite, transform);
+            GameObject newSatellite = Instantiate(satellite.gameObject);
             Vector3 position = randomSpherePosition(planet.transform.position, 
                 heightFactor * planet.transform.lossyScale.x);
             Vector3 direction = randomVelocityWithPosition(planet.transform.position, position, initialSpeed);
 
             newSatellite.transform.position = position;
-            Rigidbody rb = newsat.GetComponent<Rigidbody>();
+            Rigidbody rb = newSatellite.GetComponent<Rigidbody>();
             rb.velocity = direction;
 
             ++launchCount;

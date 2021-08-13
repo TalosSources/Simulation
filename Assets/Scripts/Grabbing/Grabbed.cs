@@ -13,11 +13,12 @@ public class Grabbed : MonoBehaviour
     Collider ownCollider;
     Collider otherCollider = null;
 
-    private bool grabbed = false;
+    public bool grabbed;
 
     private void Awake()
     {
         ownCollider = GetComponent<Collider>();
+        grabbed = false;
     }
 
     private void Update()
@@ -29,7 +30,7 @@ public class Grabbed : MonoBehaviour
             {
                 isCounting = false;
                 Physics.IgnoreCollision(ownCollider, otherCollider, false);
-                Debug.Log("Resuming Collisions");
+                //Debug.Log("Resuming Collisions");
                 time = 0;
             }
         }
@@ -45,7 +46,7 @@ public class Grabbed : MonoBehaviour
         isCounting = true;
         otherCollider = other;
         Physics.IgnoreCollision(ownCollider, otherCollider, true);
-        Debug.Log("Ignoring Collisions");
+        //Debug.Log("Ignoring Collisions");
     }
 
     public bool isGrabbed() { return grabbed; }

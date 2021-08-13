@@ -5,7 +5,7 @@ using UnityEngine;
 public class Constants
 {
     public static float G = 0.01f;
-    public static float timeStep = 0.001f;
+    public static float timeStep = 0.01f;
 
     public static float circularOrbitSpeed(float distance, float mass)
     {

@@ -178,7 +178,8 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-		boosting = false;
+		if(!pressingBoost)
+			boosting = false;
     }
 
 }

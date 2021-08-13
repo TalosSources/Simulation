@@ -19,21 +19,29 @@ public class Cloud : MonoBehaviour
     private float bounceDuration;
     private float time;
     private Vector3 positionReference;
-        //TODO : Redo a better version with a reference and a delta, which can be bigger than the difference,
-        //leading to a damped sinus wave, and of course depending of the velocity and mass of the arriving object.
-            //Also do the idle slight floating oscillation
+    //TODO : Redo a better version with a reference and a delta, which can be bigger than the difference,
+    //leading to a damped sinus wave, and of course depending of the velocity and mass of the arriving object.
+    //Also do the idle slight floating oscillation
+
+    //sticking the player
+    private Player player = null;
+    private Vector3 lastPosition;
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
+        //rb.interpolation = RigidbodyInterpolation.Interpolate;
         angle = SatelliteSpawner.randomAngle(true);
         x = Mathf.Cos(angle);
-        y = Mathf.Sin(angle);  
+        y = Mathf.Sin(angle);
+
+        speed = Random.Range(0, speed);
 
         if(b >= 0 || a  <= 0) throw new System.Exception();
         bounceDuration = -b / a;    
         time = bounceDuration;
-        positionReference = transform.position;
+        positionReference = transform.localPosition;
+        lastPosition = transform.position;
     }
 
     private void FixedUpdate()
@@ -49,10 +57,23 @@ public class Cloud : MonoBehaviour
             time += Time.deltaTime;
             bounce = a * time * time + b * time;
         }
-        transform.position = positionReference + transform.up * bounce;
+        transform.localPosition = positionReference + transform.up * bounce;
+
+        if(player != null)
+        {
+            Vector3 delta = transform.position - lastPosition;
+            player.transform.position += delta;
+        }
+        lastPosition = transform.position;
     }
 
     private void OnCollisionEnter(Collision other) {
         if(time >= bounceDuration) time = 0;
+        if (other.gameObject.tag == "Player") player = other.gameObject.GetComponent<Player>();
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag == "Player") player = null;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 //a faire encore peut etre : sliders (diégétiques) pour la taille et la vitesse
 
@@ -18,17 +19,17 @@ public class InstanceGun : MonoBehaviour
 
     private void Awake() {
         grabbed = GetComponent<Grabbed>();
-        playerRB = GameObject.FindObjectOfType<player>().GetComponent<Rigidbody>();
+        playerRB = GameObject.FindObjectOfType<Player>().GetComponent<Rigidbody>();
         ownCollider = GetComponent<Collider>();
     }
 
-    public OnShoot(InputAction.CallbackContext ctx){
-        if(!grabbed.isGrabbed) return;
+    public void OnShoot(InputAction.CallbackContext ctx){
+        if(!grabbed.isGrabbed()) return;
 
-        GameObject newProjectile = Instantiate(projectile.gameObject, launchingSpot.position);
-        projectile.onLaunch();
+        GameObject newProjectile = Instantiate(projectile.gameObject, launchingSpot);
+        projectile.onLaunch(ownCollider);
 
-        newProjectile.localScale *= scaleFactor;
+        newProjectile.transform.localScale *= scaleFactor;
 
         Vector3 initialVelocity = transform.forward * launchingSpeed + playerRB.velocity;
         newProjectile.GetComponent<Rigidbody>().velocity = initialVelocity;

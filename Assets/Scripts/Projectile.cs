@@ -20,7 +20,7 @@ public class Projectile : MonoBehaviour
 
         if(time > waitTime){
             Physics.IgnoreCollision(ownCollider, otherCollider, false);
-            this.SetActive(false);
+            gameObject.SetActive(false);
         }
 
     }
