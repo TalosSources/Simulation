@@ -12,7 +12,7 @@ public class Projectile : MonoBehaviour
     private Collider otherCollider = null;
 
     private void Awake() {
-        ownCollider = GetComponent<Collider>();
+        ownCollider = GetComponentInChildren<Collider>();
     }
 
     private void Update() {
@@ -22,7 +22,6 @@ public class Projectile : MonoBehaviour
             Physics.IgnoreCollision(ownCollider, otherCollider, false);
             //enabled = false; //Pourquoi j'ai fait ça ? (il y a surement une raison)
         }
-        Debug.Log("update!aaa");
     }
 
     public void onLaunch(Collider collider){

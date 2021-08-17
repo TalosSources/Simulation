@@ -96,7 +96,7 @@ public class Grabber : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         //Debug.Log(other.gameObject.name + " has exited the collider");
-        Grabbed grabbed = other.GetComponent<Grabbed>();
+        Grabbed grabbed = other.GetComponentInParent<Grabbed>();
         if (grabbed != null && inRange.Contains(grabbed))
         {
             //Debug.Log("it has been removed");

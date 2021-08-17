@@ -22,6 +22,8 @@ public class Cloud : MonoBehaviour
     //TODO : Redo a better version with a reference and a delta, which can be bigger than the difference,
     //leading to a damped sinus wave, and of course depending of the velocity and mass of the arriving object.
     //Also do the idle slight floating oscillation
+    //A very good idea could be to make the cloud a basic attracted object, and add to its rigidbody the exact opposite to the force it would get from the planet at the desired height.
+    //That way, the cloud would naturally goes toward that height.
 
     //sticking the player
     private Player player = null;

@@ -19,6 +19,7 @@ comprendre pourquoi on a toujours du stutter sur les planètes parfois
 mettre une animation de super-nova avec la musique éponyme (faire un joli soleil ducoup)
 ne pas hésiter à faire une ISS (avec ducoup des contrôles basés sur les forces)
 cubegun : un gun qui tire des cubes, avec deux slider diégétiques pour la taille et la vitesse de lancement
+trouver pourquoi les objets tirés ne spwanent pas directement à l'endroit voulu
 
 
 En général : ne pas hésiter à refaire certains components de unity lorsqu'ils ne correspondent pas à ce dont

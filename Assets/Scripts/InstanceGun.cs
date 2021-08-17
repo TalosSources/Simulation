@@ -42,10 +42,11 @@ public class InstanceGun : MonoBehaviour
         newProjectile.transform.localScale *= scaleFactor;
 
         Vector3 initialVelocity = transform.forward * launchingSpeed + playerRB.velocity;
+        newProjectile.transform.position += initialVelocity * Time.deltaTime;
         newProjectile.GetComponent<Rigidbody>().velocity = initialVelocity;
     }
 
-    public void OnShootRight(InputAction.CallbackContext ctx)
+    /*public void OnShootRight(InputAction.CallbackContext ctx)
     {
         if (rightGrabber.grabbed == grabbed) OnShoot(ctx);
     }
@@ -53,5 +54,5 @@ public class InstanceGun : MonoBehaviour
     public void OnShootLeft(InputAction.CallbackContext ctx)
     {
         if (leftGrabber.grabbed == grabbed) OnShoot(ctx);
-    }
+    }*/
 }
