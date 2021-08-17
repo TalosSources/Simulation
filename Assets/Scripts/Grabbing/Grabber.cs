@@ -11,7 +11,10 @@ public class Grabber : MonoBehaviour
     public Collider armCollider;
 
     private List<Grabbed> inRange = new List<Grabbed>();
-    private Grabbed grabbed = null;
+
+    [HideInInspector]
+    public Grabbed grabbed = null;
+
     private bool justDropped;
     private float handOffsetFactor = 0.2f;
 
@@ -20,7 +23,8 @@ public class Grabber : MonoBehaviour
     private void Awake()
     {
         ev = GetComponent<EstimateVelocity>();
-        ev.local = false;
+        //ev.local = false;
+        ev.local = true;
     }
 
     private void LateUpdate()
@@ -31,7 +35,7 @@ public class Grabber : MonoBehaviour
             if (grabbed.trackRotation)
                 grabbed.transform.rotation = transform.rotation;
             else
-                grabbed.transform.position += (playerRigidbody.transform.up + /*playerRigidbody.*/transform.forward) * handOffsetFactor;
+                grabbed.transform.position += (playerRigidbody.transform.up + transform.forward) * handOffsetFactor;
         }
 
         if (justDropped)
@@ -72,17 +76,19 @@ public class Grabber : MonoBehaviour
         if (grabbed == null) return;
 
         Rigidbody grabRB = grabbed.GetComponent<Rigidbody>();
-        //grabbed.transform.position += transform.forward * 0.3f;
+
         grabbed.onRelease(armCollider);
-        grabbed.transform.position = transform.position;
-        grabRB.velocity = /*playerRigidbody.velocity +*/ ev.velocity;
-        //inRange.Add(grabbed);
+        grabbed.transform.position = transform.position + 
+            (playerRigidbody.transform.up + transform.forward) * handOffsetFactor;
+
+        grabRB.velocity = playerRigidbody.velocity + ev.velocity;
+
         justDropped = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Grabbed grabbed = other.GetComponent<Grabbed>();
+        Grabbed grabbed = other.GetComponentInParent<Grabbed>();
         if (grabbed != null)
             inRange.Add(grabbed);
     }

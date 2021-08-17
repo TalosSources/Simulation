@@ -20,9 +20,9 @@ public class Projectile : MonoBehaviour
 
         if(time > waitTime){
             Physics.IgnoreCollision(ownCollider, otherCollider, false);
-            gameObject.SetActive(false);
+            //enabled = false; //Pourquoi j'ai fait ça ? (il y a surement une raison)
         }
-
+        Debug.Log("update!aaa");
     }
 
     public void onLaunch(Collider collider){

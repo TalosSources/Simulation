@@ -12,6 +12,9 @@ public class GravitySimulation : MonoBehaviour
         Application.targetFrameRate = 80;
         Time.fixedDeltaTime = Constants.timeStep;
         attractedObj = attractedObjects;
+        Grabbed.playerCollider = 
+            FindObjectOfType<Player>()
+            .GetComponentInChildren<Collider>();
         //Time.timeScale = 10f;
     }
 
