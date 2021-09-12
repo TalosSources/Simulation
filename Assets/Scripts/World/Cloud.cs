@@ -29,6 +29,10 @@ public class Cloud : MonoBehaviour
     private Player player = null;
     private Vector3 lastPosition;
 
+    //New floating stuff
+    public float pressionFactor;
+    private float standardHeight;
+
     private void Awake() {
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -44,12 +48,17 @@ public class Cloud : MonoBehaviour
         time = bounceDuration;
         positionReference = transform.localPosition;
         lastPosition = transform.position;
+
+        standardHeight = (transform.position - planet.transform.position).sqrMagnitude;
     }
 
     private void FixedUpdate()
     {
         Vector3 mainVector = transform.position - planet.transform.position;
         transform.rotation = Quaternion.FromToRotation(transform.up, mainVector) * transform.rotation;
+
+        //--------------------------------------------------------------
+
         positionReference += (x * transform.forward + y * transform.right)
                                  * Time.fixedDeltaTime
                                  * speed;
@@ -67,6 +76,15 @@ public class Cloud : MonoBehaviour
             player.transform.position += delta;
         }
         lastPosition = transform.position;
+
+        //--------------------------------------------------------------
+
+        transform.position += (x * transform.forward + y * transform.right)
+                                 * Time.fixedDeltaTime
+                                 * speed;
+        //float delta2 = standardHeight - mainVector.sqrMagnitude;
+        //Vector3 force = delta2 * mainVector.normalized;
+        //rb.AddForce(force * pressionFactor, ForceMode.Acceleration);
     }
 
     private void OnCollisionEnter(Collision other) {
